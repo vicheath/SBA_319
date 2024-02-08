@@ -3,15 +3,38 @@ import dotenv from "dotenv"
 dotenv.config()
 
 
-const client = new MongoClient(process.env.ATLAS_URI)
+const connectionString = process.env.ATLAS_URI;
+const client = new MongoClient(connectionString);
 
-let conn
-try{
-    conn = await client.connect()
-} catch (e) {
-    console.error(e)
+let db;
+
+async function connectedToDb() {
+    try {
+        await client.connect();
+        console.log('Connected to the database');
+        db = client.db('sample_mflix');
+        
+        // Create MongoDB indexes
+        await createIndexes();
+
+        console.log('Setup completed successfully');
+    } catch (error) {
+        console.error('Error connecting to the database', error);
+        process.exit(1);
+    }
 }
 
-let db = conn.db('sample_training')
+async function createIndexes() {
+    try {
+        // Create index on the '_id' field of the 'sample_analytics' collection
+        await db.collection('sample_mflix').createIndex({ _id: 1 });
+        console.log('MongoDB indexes created');
+    } catch (error) {
+        console.error('Error creating MongoDB indexes', error);
+     
+    }
+}
 
-export default db
+await connectedToDb();
+
+export default db;
