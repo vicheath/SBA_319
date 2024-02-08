@@ -14,9 +14,9 @@ const app = express();
 app.use(express.json());
 app.use(routes)
 
-// db.on("error", (err) => console.log(err.message + " is mongod not running?"));
-// db.on("open", () => console.log("mongo connected: ", ATLAS_URI));
-// db.on("close", () => console.log("mongo disconnected"));
+db.on("error", (err) => console.log(err.message + " is mongod not running?"));
+db.on("open", () => console.log("mongo connected: ", ATLAS_URI));
+db.on("close", () => console.log("mongo disconnected"));
 
 
 // Global error handeling
