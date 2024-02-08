@@ -39,7 +39,6 @@ router.get('/comments/names', async (req, res) => {
 
 
 
-
 //Get route for movies
 router.get("/movies", async (req, res) => {
   try {
@@ -76,6 +75,14 @@ router.get("/users", async (req, res) => {
   }
 });
 
+// Delete a single User
+router.delete("/user/:id", async (req, res) => {
+  await users.findByIdAndDelete(req.params.id)
+  res.status(204).json({
+    data: "Item was deleted"
+  })
+  
+});
 
 // GET route for fetching a single user by ID
 router.get("/users/:id", async (req, res) => {
