@@ -19,6 +19,17 @@ router.get("/comments", async (req, res) => {
   }
 });
 
+// Create a new comment 
+
+router.post('/comments', async (req,res) =>{
+  let collection = await db.collection('comment')
+  let newDocument = req.body
+
+  
+  let result = await collection.insertOne(newDocument)
+  res.send(result).status(204)
+})
+
 router.get('/comments/names', async (req, res) => {
   let foundComment = await Comment.findById().limit(50)
   res.status(200).json({
@@ -39,6 +50,20 @@ router.get("/movies", async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 });
+
+//Update a movie ID
+router.patch("/movie/:id", async (req, res) => {
+  let collection = await db.collection("movies")
+  let query = { class_id: Number(req.params.id) }
+
+  let result = await collection.updateMany(query, {
+    $set: { class_id: req.body.class_id }
+  })
+
+  if (!result) res.send("Not found").status(404)
+  else res.send(result).status(200)
+})
+
 
 //Get route for users
 router.get("/users", async (req, res) => {
